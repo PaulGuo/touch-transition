@@ -25,13 +25,14 @@ $(document).ready(function() {
     // fixed by liuhuo.gk
 
     var isFallback = $(document.body).transition('isFallback');
+    var targetPage = window.location.hash && window.location.hash != '#' ? window.location.hash : '';
 
     if(isFallback) {
         location.hash && location.replace(location.hash.replace('#', ''));
         return;
     }
 
-    $(document.body).transition('init').show();
+    $(document.body).transition('init', {}, targetPage).show();
 
     // fixed by liuhuo.gk
 
