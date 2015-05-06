@@ -1,0 +1,16 @@
+{
+  "name": "touch-transition",
+  "version": "1.0.0",
+  "description": "lightweight page transition framework for mobile touch.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "transition",
+    "mobile",
+    "touch"
+  ],
+  "author": "GuoKai",
+  "license": "ISC"
+}
