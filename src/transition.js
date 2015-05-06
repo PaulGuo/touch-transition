@@ -12,11 +12,11 @@
  * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- * 
+ *
  * @author gileadis@gmail.com
  * @version 1.0.0
- * 
- * @requires 
+ *
+ * @requires
  * Zepto JavaScript Library: http://zeptojs.com
  */
 
@@ -57,8 +57,8 @@ $(document).ready(function() {
         action                = null,
         history                = [],
         historyPos          = 0,
-     //add by huya.nzb
-     preloaded           = $.transitionPreloaded = {};
+        //add by huya.nzb
+        preloaded           = $.transitionPreloaded = {};
 
     // fixed by liuhuo.gk
 
@@ -107,10 +107,10 @@ $(document).ready(function() {
                     settings.newURL = location.href;
                     settings.oldHash = settings.newHash;
                     settings.newHash = getHash(settings.newURL);
-                    
+
                     // hash '' -> '#' ʱ������
                     if (settings.oldHash === settings.newHash) { return; }
-                    
+
                     var target = (action && action.element) || $(document.body);
                     if (!ignoreHash[window.location.hash]) {
                         var to = window.location.hash;
@@ -188,7 +188,7 @@ $(document).ready(function() {
             if (window.location.hash) {
                 initial = $(toId(window.location.hash));
                 if (!initial.length) {
-// TODO: maybe ajax-load the initial page instead?
+                    // TODO: maybe ajax-load the initial page instead?
                     initial = pages.first();
                     var formerId = initial.attr('id');
                     var id = toId(pageUrls[window.location.hash] || window.location.hash.slice(1));
@@ -439,7 +439,7 @@ $(document).ready(function() {
                     });
                 }
             };
-            
+
             //add by huya.nzb
             if (preload) {
                 if (preload.loading) {
@@ -459,18 +459,18 @@ $(document).ready(function() {
                 $.ajax(what);
             }
         },
-        
+
         //add by huya.nzb
         preload: function(what) {
             what = typeof what === 'string' ? {url: what, dataType: 'html', global: false} : what;
             if (!what.url)
                 what.url = window.location.href;
-            
+
             var id = toId(what.url);
             var preload = preloaded[id] = {
                 loading: true
             };
-                        
+
             what.success = function(result, textStatus, xhr) {
                 $.extend(preload, {
                     loading: false,
@@ -482,7 +482,7 @@ $(document).ready(function() {
                     preload.callback.success(preload.result, preload.textStatus, preload.xhr); 
                 }
             };
-            
+
             what.error = function(xhr, textStatus, errorThrown) {
                 $.extend(preload, {
                     loading: false,
@@ -495,41 +495,41 @@ $(document).ready(function() {
                     preload.callback.error(preload.xhr, preload.textStatus, preload.errorThrown);
                 }
             };
-            
+
             what.progress = function(e, xhr, settings) {
                 if (preload.callback) {
                     preload.callback.progress(e, xhr, settings);
                 }
             };
-            
+
             $.ajax(what);
         },
 
         perform : function(from, to, transition, back, top, changeEventData) {
             var ended = false,
-                start, end;           
-            
+                start, end;
+
             changeEventData.from = from;
             changeEventData.to = to;
 
             from.trigger('pagebeforehide', from);
             to.trigger('pagebeforeshow', to);
-            
+
             start = function() {
                 var pos = to.position();
                 to.css({top: pos.top - top});
-                
+
                 //fixed by huya.nzb
                 //fixed ios6 ����
                 to.css('visibility', 'hidden');
                 to.show();
-                
+
                 from.removeClass('ui-page-active');
                 to.addClass('ui-page-active');
-                
+
                 from.addClass(transition + ' out');
                 to.addClass(transition + ' in');
-                
+
                 //fixed by huya.nzb
                 //fixed ios6 ����
                 to.css('visibility', 'visible');
@@ -539,19 +539,19 @@ $(document).ready(function() {
                     to.addClass('reverse');
                 }
             };
-            
+
             end = function() {
-        
-            // fixed by liuhuo.gk
-        to.css({top: 0});
-        window.scrollTo(0, top);
-                
-                //fixed by huya  
+
+                // fixed by liuhuo.gk
+                to.css({top: 0});
+                window.scrollTo(0, top);
+
+                //fixed by huya
                 //hide from first
                 if (ended) { return; }
-                
+
                 from.hide();
-                
+
                 from.removeClass(transition + ' out');
                 to.removeClass(transition + ' in');
                 from.removeClass('reverse');
@@ -568,8 +568,8 @@ $(document).ready(function() {
                 to.trigger('pageshow', to);
 
                 $(document).trigger('pagechange', changeEventData);
-                
-                //fixed by huya    
+
+                //fixed by huya
                 //$('div[data-role="page"]').hide();
                 to.show();
 
@@ -585,16 +585,16 @@ $(document).ready(function() {
                     });
                     $('div[data-role="page-container"]').not(function() {return $(this).children().length;}).remove();
                 }
-                
+
                 ended = true;
             };
-            
+
             window.setTimeout(function() {
                 start();
             }, 1);
-            
+
             to[0].addEventListener('webkitAnimationEnd', end, false);
-            
+
             window.setTimeout(function() {
                 end();
             //}, 707);
@@ -617,7 +617,7 @@ $(document).ready(function() {
         var url = url || '',
             index = url.indexOf('#'),
             hash;
-            
+
         if (index > -1) {
             hash = url.substring(index);
             return hash == '#' ? '' : hash;
