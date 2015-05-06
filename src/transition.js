@@ -22,86 +22,86 @@
 
 $(document).ready(function() {
 
-	// fixed by liuhuo.gk
+    // fixed by liuhuo.gk
 
-	var isFallback = $(document.body).transition('isFallback');
+    var isFallback = $(document.body).transition('isFallback');
 
-	if(isFallback) {
-		location.hash && location.replace(location.hash.replace('#', ''));
-		return;
-	}
+    if(isFallback) {
+        location.hash && location.replace(location.hash.replace('#', ''));
+        return;
+    }
 
-	$(document.body).transition('init').show();
+    $(document.body).transition('init').show();
 
-	// fixed by liuhuo.gk
+    // fixed by liuhuo.gk
 
-	$(document.body).transition('options', {
-		defaultPageTransition: 'slide',
-		domCache: true
-	});
+    $(document.body).transition('options', {
+        defaultPageTransition: 'slide',
+        domCache: true
+    });
 
-	if((window.location.hash && window.location.hash != '#') || !$('#initial-page').length) {
-		$('div[data-role="page"]').attr('id', 'initial-page');
-		$(document.body).transition('changePage', window.location.hash, 'default', null, 0);
-	}
+    if((window.location.hash && window.location.hash != '#') || !$('#initial-page').length) {
+        $('div[data-role="page"]').attr('id', 'initial-page');
+        $(document.body).transition('changePage', window.location.hash, 'default', null, 0);
+    }
 });
 
 (function( $ ) {
 
-	var zIndex				= 0,
-		inited				= false,
-		settings			= null,
-		pageUrls			= {},
-		lastLoadedUrl		= window.location.href,
-		ignoreHash			= {},
-		action				= null,
-		history				= [],
+    var zIndex                = 0,
+        inited                = false,
+        settings            = null,
+        pageUrls            = {},
+        lastLoadedUrl        = window.location.href,
+        ignoreHash            = {},
+        action                = null,
+        history                = [],
         historyPos          = 0,
-	 //add by huya.nzb
-	 preloaded           = $.transitionPreloaded = {};
+     //add by huya.nzb
+     preloaded           = $.transitionPreloaded = {};
 
-	// fixed by liuhuo.gk
+    // fixed by liuhuo.gk
 
-	var ua = navigator.userAgent;
-	var isUC = ua.match(/UCBrowser/igm);
-	var isAlipayWebApp = ua.match(/AlipayWebApp/igm) || ua.match(/AlipayClient/igm) || window.alipay || window.AlipayJSBridge;
-	var isI9000 = ua.match(/GT-I9000/igm);
-	var isHTCDesire = ua.match(/HTC\s*Desire/igm);
-	var isFallback = isUC || isAlipayWebApp || isI9000 || isHTCDesire;
-	var backTop = null;
+    var ua = navigator.userAgent;
+    var isUC = ua.match(/UCBrowser/igm);
+    var isAlipayWebApp = ua.match(/AlipayWebApp/igm) || ua.match(/AlipayClient/igm) || window.alipay || window.AlipayJSBridge;
+    var isI9000 = ua.match(/GT-I9000/igm);
+    var isHTCDesire = ua.match(/HTC\s*Desire/igm);
+    var isFallback = isUC || isAlipayWebApp || isI9000 || isHTCDesire;
+    var backTop = null;
 
-	var methods = {
+    var methods = {
 
-		isSupport : function() {
-			return !isFallback;
-		},
+        isSupport : function() {
+            return !isFallback;
+        },
 
-		isFallback : function() {
-			return isFallback;
-		},
+        isFallback : function() {
+            return isFallback;
+        },
 
-		options : function(options) {
+        options : function(options) {
 
-			settings = $.extend( {
-				defaultPageTransition : 'fade',
+            settings = $.extend( {
+                defaultPageTransition : 'fade',
                 domCache : false,
                 //add by huya.nzb
                 oldURL: document.referrer,
                 newURL: location.href,
                 oldHash: getHash(location.href),
                 newHash: getHash(location.href)
-			}, options);
-		},
+            }, options);
+        },
 
-		init : function(eventData, targetPage, title) {
+        init : function(eventData, targetPage, title) {
 
-			// one-time initialization
-			if (!inited) {
-				inited = true;
+            // one-time initialization
+            if (!inited) {
+                inited = true;
 
-				$(document.body).transition('options', {});
+                $(document.body).transition('options', {});
 
-				$(window).on('hashchange', function(e) {
+                $(window).on('hashchange', function(e) {
                     //fixed by huya.nzb
                     settings.oldURL = settings.newURL;
                     settings.newURL = location.href;
@@ -111,321 +111,321 @@ $(document).ready(function() {
                     // hash '' -> '#' ʱ������
                     if (settings.oldHash === settings.newHash) { return; }
                     
-					var target = (action && action.element) || $(document.body);
-					if (!ignoreHash[window.location.hash]) {
-						var to = window.location.hash;
-						var from = $('div.ui-page-active').attr('id');
-						if (from)
-							from = '#' + from;
-						if (action && action.element && action.element.is('form')) {
-							to = {
-								type: action.element.attr('method') || 'get',
-								url: window.location.hash.slice(1),
-								data: action.element.serialize(),
-								dataType: 'html',
-								global: false
-							};
-						}
-						var transition = null;
-						var back = action == null;
-						var top = 0;
-						if (back) {
-							if (historyPos < history.length && history[historyPos].to == to) {
-								action = history[historyPos++];
-								back = false;
-							} else if (historyPos > 0) {
-								action = history[--historyPos];
-								back = action ? !action.reverse : true;
-							}
-							transition = action ? action.transition : settings.defaultPageTransition;
-							if (action) {
-								top = action.top || 0;
+                    var target = (action && action.element) || $(document.body);
+                    if (!ignoreHash[window.location.hash]) {
+                        var to = window.location.hash;
+                        var from = $('div.ui-page-active').attr('id');
+                        if (from)
+                            from = '#' + from;
+                        if (action && action.element && action.element.is('form')) {
+                            to = {
+                                type: action.element.attr('method') || 'get',
+                                url: window.location.hash.slice(1),
+                                data: action.element.serialize(),
+                                dataType: 'html',
+                                global: false
+                            };
+                        }
+                        var transition = null;
+                        var back = action == null;
+                        var top = 0;
+                        if (back) {
+                            if (historyPos < history.length && history[historyPos].to == to) {
+                                action = history[historyPos++];
+                                back = false;
+                            } else if (historyPos > 0) {
+                                action = history[--historyPos];
+                                back = action ? !action.reverse : true;
+                            }
+                            transition = action ? action.transition : settings.defaultPageTransition;
+                            if (action) {
+                                top = action.top || 0;
 
-								// fixed by liuhuo.gk
+                                // fixed by liuhuo.gk
 
-								if(backTop !== undefined && backTop !== null) {
-									top = backTop;
-								}
+                                if(backTop !== undefined && backTop !== null) {
+                                    top = backTop;
+                                }
 
-								if (!to && $(action.from).length)
-									to = action.from;
-							}
-						} else if (action.transition) {
-							transition = action.transition;
-							history[historyPos++] = {to: to, from: from, transition: transition, top: $(window).scrollTop()};
-							back = action.reverse;
-						} else {
-							transition = action.element.attr('transition') || action.element.data('transition') || settings.defaultPageTransition;
-							var direction = action.element.attr('direction') || action.element.data('direction');
-							if (direction === 'reverse')
-								back = true;
-							history[historyPos++] = {to: to, from: from, transition: transition, reverse: back, top: $(window).scrollTop()};
-						}
-						target.transition('changePage', to, transition, back, top);
-					}
-					action = null;
-				});
-			}
+                                if (!to && $(action.from).length)
+                                    to = action.from;
+                            }
+                        } else if (action.transition) {
+                            transition = action.transition;
+                            history[historyPos++] = {to: to, from: from, transition: transition, top: $(window).scrollTop()};
+                            back = action.reverse;
+                        } else {
+                            transition = action.element.attr('transition') || action.element.data('transition') || settings.defaultPageTransition;
+                            var direction = action.element.attr('direction') || action.element.data('direction');
+                            if (direction === 'reverse')
+                                back = true;
+                            history[historyPos++] = {to: to, from: from, transition: transition, reverse: back, top: $(window).scrollTop()};
+                        }
+                        target.transition('changePage', to, transition, back, top);
+                    }
+                    action = null;
+                });
+            }
 
-			// create logical pages in divs
-			var pages = $('div[data-role="page"]', this);
-			if (!pages.length) {
-				if (this.is('div')) {
-					this.attr('data-role', 'page');
-					this.attr('id', '_trans_div' + zIndex);
-					pages = this;
-				} else {
-					pages = $('<div data-role="page" id="_trans_div' + zIndex + '" />');
-					this.children().wrapAll(pages);
-				}
-			}
+            // create logical pages in divs
+            var pages = $('div[data-role="page"]', this);
+            if (!pages.length) {
+                if (this.is('div')) {
+                    this.attr('data-role', 'page');
+                    this.attr('id', '_trans_div' + zIndex);
+                    pages = this;
+                } else {
+                    pages = $('<div data-role="page" id="_trans_div' + zIndex + '" />');
+                    this.children().wrapAll(pages);
+                }
+            }
 
-			if (eventData)
-				pages.trigger('pageload', eventData);
+            if (eventData)
+                pages.trigger('pageload', eventData);
 
-			// the initial page is special: its id must equal its hash
-			var initial = pages.first();
-			if (window.location.hash) {
-				initial = $(toId(window.location.hash));
-				if (!initial.length) {
+            // the initial page is special: its id must equal its hash
+            var initial = pages.first();
+            if (window.location.hash) {
+                initial = $(toId(window.location.hash));
+                if (!initial.length) {
 // TODO: maybe ajax-load the initial page instead?
-					initial = pages.first();
-					var formerId = initial.attr('id');
-					var id = toId(pageUrls[window.location.hash] || window.location.hash.slice(1));
-					initial.attr('id', id);
-					if (formerId) {
-						// fix all links that pointed to it
-						$('[data-href="#' + formerId + '"]', pages).attr('data-href', '#' + id);
-						$('[href="#' + formerId + '"]', pages).attr('href', '#' + id);
-					}
-				}
-			}
+                    initial = pages.first();
+                    var formerId = initial.attr('id');
+                    var id = toId(pageUrls[window.location.hash] || window.location.hash.slice(1));
+                    initial.attr('id', id);
+                    if (formerId) {
+                        // fix all links that pointed to it
+                        $('[data-href="#' + formerId + '"]', pages).attr('data-href', '#' + id);
+                        $('[href="#' + formerId + '"]', pages).attr('href', '#' + id);
+                    }
+                }
+            }
 
-			pages.addClass('ui-page');
-			pages.each(function() {
-				if (!$(this).attr('id'))
-					$(this).attr('id', '_trans_div' + zIndex);
-				pageUrls['#' + $(this).attr('id')] = lastLoadedUrl;
+            pages.addClass('ui-page');
+            pages.each(function() {
+                if (!$(this).attr('id'))
+                    $(this).attr('id', '_trans_div' + zIndex);
+                pageUrls['#' + $(this).attr('id')] = lastLoadedUrl;
 
-				$(this).css('zIndex', zIndex++);
-			});
+                $(this).css('zIndex', zIndex++);
+            });
 
-			$('a[href]', pages).not('[target]').not('[rel="external"]').not('[data-ajax="false"]').not('[data-href]').transition('hijackLinks');
-			$('[data-href]', pages).transition('hijackLinks');
-			$('form').not('[target]').not('[data-ajax="false"]').transition('hijackLinks');
+            $('a[href]', pages).not('[target]').not('[rel="external"]').not('[data-ajax="false"]').not('[data-href]').transition('hijackLinks');
+            $('[data-href]', pages).transition('hijackLinks');
+            $('form').not('[target]').not('[data-ajax="false"]').transition('hijackLinks');
 
-			if (!title)
-				title = document.title;
-			pages.not('[data-title]').data('title', title);
-			title = initial.data('title');
-			if (title)
-				document.title = title;
+            if (!title)
+                title = document.title;
+            pages.not('[data-title]').data('title', title);
+            title = initial.data('title');
+            if (title)
+                document.title = title;
 
-			pages.hide();
-			var active = targetPage ? $(targetPage) : null;
-			active = active || initial;
-			active.addClass('ui-page-active');
+            pages.hide();
+            var active = targetPage ? $(targetPage) : null;
+            active = active || initial;
+            active.addClass('ui-page-active');
 
-			pages.each(function() {
-				$(this).trigger('pageinit', $(this));
-			});
+            pages.each(function() {
+                $(this).trigger('pageinit', $(this));
+            });
 
-			return active;
-		},
+            return active;
+        },
 
-		to : function(page, transition, reverse, top) {
+        to : function(page, transition, reverse, top) {
 
-			// fixed by liuhuo.gk
+            // fixed by liuhuo.gk
 
-			if(isFallback) {
-				window.location.href = page;
-				return;
-			}
+            if(isFallback) {
+                window.location.href = page;
+                return;
+            }
 
-			backTop = top;
+            backTop = top;
 
-			transition = transition || settings.defaultPageTransition;
-			if (!reverse)
-				reverse = false;
-			action = {transition: transition, reverse: reverse};
-			window.location.hash = '#' + page;
-		},
+            transition = transition || settings.defaultPageTransition;
+            if (!reverse)
+                reverse = false;
+            action = {transition: transition, reverse: reverse};
+            window.location.hash = '#' + page;
+        },
 
-		hijackLinks : function() {
+        hijackLinks : function() {
 
-			return this.each(function() {
-				var el = $(this);
+            return this.each(function() {
+                var el = $(this);
 
-				// fixed by liuhuo.gk
-				if(el.attr('data-ignore') === 'true') {
-					return;
-				}
+                // fixed by liuhuo.gk
+                if(el.attr('data-ignore') === 'true') {
+                    return;
+                }
 
-				if (el.data('rel') == 'back') {
-					var handler = function(e) {
-						window.history.back();
-						e.preventDefault();
-					};
+                if (el.data('rel') == 'back') {
+                    var handler = function(e) {
+                        window.history.back();
+                        e.preventDefault();
+                    };
                     //fixed by huya.nzb
                     //������ػ����������
                     el.on('click', handler);
                     //el.on('tap', handler);
-					return;
-				}
+                    return;
+                }
 
-				var href = el.attr('data-href') || el.attr('href') || el.attr('action') || "#";
-				if (href.charAt(0) === '#') {
-					// ignore some hash links; this is buggy when navigating backwards
-					if ($('a[name="' + href.slice(1) + '"]').length) {
-						ignoreHash[href] = true;
-						return;
-					}
-				} else {
-					// change all links to be hash links
-					href = '#' + href;
-					if (el.is('a'))
-						el.attr('href', href);
-					else if (el.attr('action'))
-						el.attr('action', href);
-					if (el.attr('data-href'))
-						el.attr('data-href', href);
-				}
+                var href = el.attr('data-href') || el.attr('href') || el.attr('action') || "#";
+                if (href.charAt(0) === '#') {
+                    // ignore some hash links; this is buggy when navigating backwards
+                    if ($('a[name="' + href.slice(1) + '"]').length) {
+                        ignoreHash[href] = true;
+                        return;
+                    }
+                } else {
+                    // change all links to be hash links
+                    href = '#' + href;
+                    if (el.is('a'))
+                        el.attr('href', href);
+                    else if (el.attr('action'))
+                        el.attr('action', href);
+                    if (el.attr('data-href'))
+                        el.attr('data-href', href);
+                }
 
-				var handler;
-				if (el.is('a')) {
-					handler = function(e) {
-						action = {element: el};
-					};
-				} else if (el.is('form')) {
-					handler = function(e) {
-						action = {element: el};
-						window.location.href = href;
-						e.preventDefault();
-					}
-					el.on('submit', handler);
-				} else {
-					handler = function(e) {
-						action = {element: el};
-						window.location.href = href;
-					}
-				}
+                var handler;
+                if (el.is('a')) {
+                    handler = function(e) {
+                        action = {element: el};
+                    };
+                } else if (el.is('form')) {
+                    handler = function(e) {
+                        action = {element: el};
+                        window.location.href = href;
+                        e.preventDefault();
+                    }
+                    el.on('submit', handler);
+                } else {
+                    handler = function(e) {
+                        action = {element: el};
+                        window.location.href = href;
+                    }
+                }
 
-				if (!el.is('form')) {
-					el.on('click', handler);
-					el.on('tap', handler);
-				}
-			});
-		},
+                if (!el.is('form')) {
+                    el.on('click', handler);
+                    el.on('tap', handler);
+                }
+            });
+        },
 
-		changePage : function(to, transition, back, top) {
+        changePage : function(to, transition, back, top) {
 
-			var changeEventData = { toPage: to, back: back };
-			var e = $.Event('pagebeforechange');
-			$(this).trigger(e, changeEventData);
-			if (e.defaultPrevented)
-				return;
-			else {
-				to = changeEventData.toPage;
-				back = changeEventData.back;
-			}
+            var changeEventData = { toPage: to, back: back };
+            var e = $.Event('pagebeforechange');
+            $(this).trigger(e, changeEventData);
+            if (e.defaultPrevented)
+                return;
+            else {
+                to = changeEventData.toPage;
+                back = changeEventData.back;
+            }
 
-			var href = typeof to === 'string' ? to : to.url;
-			var targetPage = null;
-			var from = $('div.ui-page-active');
-			var handled = false;
+            var href = typeof to === 'string' ? to : to.url;
+            var targetPage = null;
+            var from = $('div.ui-page-active');
+            var handled = false;
 
-			if ((typeof to === 'string') && to.charAt(0) === '#') {
-				var toPage = $(toId(to));
-				if (toPage.length) {
-					$(this).transition('perform', from, toPage, transition, back, top, changeEventData);
-					handled = true;
-				} else if (!settings.domCache && pageUrls[to]) {
-					targetPage = to;
-					to = pageUrls[to];
-				} else
-					to = to.slice(1);
-			}
+            if ((typeof to === 'string') && to.charAt(0) === '#') {
+                var toPage = $(toId(to));
+                if (toPage.length) {
+                    $(this).transition('perform', from, toPage, transition, back, top, changeEventData);
+                    handled = true;
+                } else if (!settings.domCache && pageUrls[to]) {
+                    targetPage = to;
+                    to = pageUrls[to];
+                } else
+                    to = to.slice(1);
+            }
 
-			// fixed by liuhuo.gk
-			if((typeof to === 'string') && to === '') {
-				var toPage = $('#initial-page');
-				$(this).transition('perform', from, toPage, transition, back, top, changeEventData);
-				return;
-			}
+            // fixed by liuhuo.gk
+            if((typeof to === 'string') && to === '') {
+                var toPage = $('#initial-page');
+                $(this).transition('perform', from, toPage, transition, back, top, changeEventData);
+                return;
+            }
 
-			if (!handled) {
-				var eventData = {href: href, element: $(this), back: back};
-				var e = $.Event('pagebeforeload');
-				$(this).trigger(e, eventData);
-				var el = $(this);
-				if (!e.defaultPrevented) {
-					$(this).transition('load', to, eventData, function(body, result, title) {
-						// add it to the current document
-						var div = $('<div data-role="page-container" />');
-						// div.html(body);
-						// fixed by liuhuo.gk
-						div.get(0).innerHTML = body;
-						$(document.body).append(div);
+            if (!handled) {
+                var eventData = {href: href, element: $(this), back: back};
+                var e = $.Event('pagebeforeload');
+                $(this).trigger(e, eventData);
+                var el = $(this);
+                if (!e.defaultPrevented) {
+                    $(this).transition('load', to, eventData, function(body, result, title) {
+                        // add it to the current document
+                        var div = $('<div data-role="page-container" />');
+                        // div.html(body);
+                        // fixed by liuhuo.gk
+                        div.get(0).innerHTML = body;
+                        $(document.body).append(div);
 
-						var to = $(div).transition('init', eventData, targetPage, title);
-						$(el).transition('perform', from, to, transition, back, top, changeEventData);
-					});
-					handled = true;
-				}
-			}
+                        var to = $(div).transition('init', eventData, targetPage, title);
+                        $(el).transition('perform', from, to, transition, back, top, changeEventData);
+                    });
+                    handled = true;
+                }
+            }
 
-			if (!handled)
-				$(this).trigger('pagechangefailed', changeEventData);
-		},
+            if (!handled)
+                $(this).trigger('pagechangefailed', changeEventData);
+        },
 
-		load : function(what, eventData, onSuccess) {
+        load : function(what, eventData, onSuccess) {
 
-			what = typeof what === 'string' ? {url: what, dataType: 'html', global: false} : what;
-			if (!what.url)
-				what.url = window.location.href;
+            what = typeof what === 'string' ? {url: what, dataType: 'html', global: false} : what;
+            if (!what.url)
+                what.url = window.location.href;
 
             //add by huya.nzb
             var docElem = $(document),
                 fromPage = $('div.ui-page-active'),
                 id = toId(what.url),
                 preload = preloaded[id];
-			what.success = function(result, textStatus, xhr) {
-				eventData.xhr = xhr;
-				eventData.textStatus = textStatus;
+            what.success = function(result, textStatus, xhr) {
+                eventData.xhr = xhr;
+                eventData.textStatus = textStatus;
 
-				lastLoadedUrl = what.url;
+                lastLoadedUrl = what.url;
 
-				// mark everything not just loaded as disposable
-				if (!settings.domCache)
-					$('div[data-role="page"]').not('[data-dom-cache="true"]').addClass('transition-recyclable');
+                // mark everything not just loaded as disposable
+                if (!settings.domCache)
+                    $('div[data-role="page"]').not('[data-dom-cache="true"]').addClass('transition-recyclable');
 
-				// extract the body and title from the html
-				var bodyStart = result.search(/<body/i);
-				var head = result;
-				var body = result;
-				var title;
-				if (bodyStart != -1) {
-					head = result.slice(0, bodyStart);
-					bodyStart = result.indexOf('>', bodyStart);
-					bodyEnd = result.search(/<\/body>/i);
-					body = result.slice(bodyStart + 1, bodyEnd);
-				}
-				var match = head.match(/<title>(.+)<\/title>/im);
-				if (match)
-					title = match[1];
+                // extract the body and title from the html
+                var bodyStart = result.search(/<body/i);
+                var head = result;
+                var body = result;
+                var title;
+                if (bodyStart != -1) {
+                    head = result.slice(0, bodyStart);
+                    bodyStart = result.indexOf('>', bodyStart);
+                    bodyEnd = result.search(/<\/body>/i);
+                    body = result.slice(bodyStart + 1, bodyEnd);
+                }
+                var match = head.match(/<title>(.+)<\/title>/im);
+                if (match)
+                    title = match[1];
 
-				// adjust relative links
-				body = fixLinks(body);
+                // adjust relative links
+                body = fixLinks(body);
 
-				onSuccess(body, result, title);
-			};
-			what.error = function(xhr, textStatus, errorThrown) {
-				eventData.xhr = xhr;
-				eventData.textStatus = textStatus;
-				eventData.errorThrown = errorThrown;
-				$(this).trigger('pageloadfailed', eventData);
-				$(this).trigger('pagechangefailed', {toPage: what.url});
-			};
+                onSuccess(body, result, title);
+            };
+            what.error = function(xhr, textStatus, errorThrown) {
+                eventData.xhr = xhr;
+                eventData.textStatus = textStatus;
+                eventData.errorThrown = errorThrown;
+                $(this).trigger('pageloadfailed', eventData);
+                $(this).trigger('pagechangefailed', {toPage: what.url});
+            };
             //add by huya.nzb
             what.progress = function(e, xhr, settings) {
                 if (e && e.lengthComputable) {
@@ -505,7 +505,7 @@ $(document).ready(function() {
             $.ajax(what);
         },
 
-		perform : function(from, to, transition, back, top, changeEventData) {
+        perform : function(from, to, transition, back, top, changeEventData) {
             var ended = false,
                 start, end;           
             
@@ -541,11 +541,11 @@ $(document).ready(function() {
             };
             
             end = function() {
-	    
-    		// fixed by liuhuo.gk
-		to.css({top: 0});
-		window.scrollTo(0, top);
-				
+        
+            // fixed by liuhuo.gk
+        to.css({top: 0});
+        window.scrollTo(0, top);
+                
                 //fixed by huya  
                 //hide from first
                 if (ended) { return; }
@@ -557,8 +557,8 @@ $(document).ready(function() {
                 from.removeClass('reverse');
                 to.removeClass('reverse');
 
-				// to.css({top: 0});
-				// window.scrollTo(0, top);
+                // to.css({top: 0});
+                // window.scrollTo(0, top);
 
                 var title = to.data('title');
                 if (title)
@@ -600,19 +600,19 @@ $(document).ready(function() {
             //}, 707);
             //}, 307);
             }, transition === 'default' ? 2 : 607);
-		}
+        }
 
-	};
+    };
 
-	$.fn.transition = function(method) {
+    $.fn.transition = function(method) {
 
-		if (methods[method])
-		  return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
-		else if (typeof method === 'object' || !method)
-		  return methods.to.apply(this, arguments);
-		else
-		  throw 'Method ' +  method + ' does not exist';
-	};
+        if (methods[method])
+          return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
+        else if (typeof method === 'object' || !method)
+          return methods.to.apply(this, arguments);
+        else
+          throw 'Method ' +  method + ' does not exist';
+    };
     function getHash(url) {
         var url = url || '',
             index = url.indexOf('#'),
@@ -626,60 +626,60 @@ $(document).ready(function() {
         }
     }
 
-	function toId(url) {
-		var i = url.indexOf('?');
-		if (i > 0)
-			url = url.slice(0, i);
-		return url.replace(/[:\.\+\/]/g, '_');
-	}
+    function toId(url) {
+        var i = url.indexOf('?');
+        if (i > 0)
+            url = url.slice(0, i);
+        return url.replace(/[:\.\+\/]/g, '_');
+    }
 
-	function fixLinks(body) {
+    function fixLinks(body) {
 
-		if (window.location.hash) {
-			var relative = relativePath(window.location.pathname, window.location.hash.slice(1));
-			if (relative.length) {
-				body = body.replace(/(\b(src|href|action))="([^"#:]+)"/gi, '$1="' + relative + '$3"');
+        if (window.location.hash) {
+            var relative = relativePath(window.location.pathname, window.location.hash.slice(1));
+            if (relative.length) {
+                body = body.replace(/(\b(src|href|action))="([^"#:]+)"/gi, '$1="' + relative + '$3"');
 
-				// fix replaced links in the form of "relative/../"
-				body = body.replace(/(\b(src|href|action))="(.+\/)?[^\/]+\/\.\.\//gi, '$1="$3');
-			}
-		}
-		return body;
-	}
+                // fix replaced links in the form of "relative/../"
+                body = body.replace(/(\b(src|href|action))="(.+\/)?[^\/]+\/\.\.\//gi, '$1="$3');
+            }
+        }
+        return body;
+    }
 
-	function relativePath(fromPath, toPath) {
+    function relativePath(fromPath, toPath) {
 
-		var relative = '';
+        var relative = '';
 
-		var slashIndex = toPath.lastIndexOf('/');
-		if (slashIndex != -1) {
-			relative = toPath.slice(0, slashIndex + 1);
-			if (relative.charAt(0) == '/') {
-				// strip the common start of paths
-				if (!fromPath.charAt(0) == '/')
-					fromPath = '/' + fromPath;
-				var start = 1;
-				slashIndex = start;
-				do {
-					slashIndex = relative.indexOf('/', slashIndex) + 1;
-					if (slashIndex > start && relative.slice(0, slashIndex) == fromPath.slice(0, slashIndex))
-						start = slashIndex;
-				} while (slashIndex > 0 && slashIndex == start);
+        var slashIndex = toPath.lastIndexOf('/');
+        if (slashIndex != -1) {
+            relative = toPath.slice(0, slashIndex + 1);
+            if (relative.charAt(0) == '/') {
+                // strip the common start of paths
+                if (!fromPath.charAt(0) == '/')
+                    fromPath = '/' + fromPath;
+                var start = 1;
+                slashIndex = start;
+                do {
+                    slashIndex = relative.indexOf('/', slashIndex) + 1;
+                    if (slashIndex > start && relative.slice(0, slashIndex) == fromPath.slice(0, slashIndex))
+                        start = slashIndex;
+                } while (slashIndex > 0 && slashIndex == start);
 
-				// make a relative path between them
-				var back = '';
-				slashIndex = start;
-				do {
-					slashIndex = fromPath.indexOf('/', slashIndex + 1);
-					if (slashIndex != -1)
-						back += '../';
-				} while (slashIndex != -1);
+                // make a relative path between them
+                var back = '';
+                slashIndex = start;
+                do {
+                    slashIndex = fromPath.indexOf('/', slashIndex + 1);
+                    if (slashIndex != -1)
+                        back += '../';
+                } while (slashIndex != -1);
 
-				relative = back + relative.slice(start);
-			}
-		}
+                relative = back + relative.slice(start);
+            }
+        }
 
-		return relative;
-	}
+        return relative;
+    }
 
 })( Zepto );
