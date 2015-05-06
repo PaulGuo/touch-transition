@@ -8,15 +8,17 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="../src/transition.css">
-    <script type="text/javascript" src="zepto.js"></script>
-    <script type="text/javascript" src="transition.js"></script>
+    <script type="text/javascript" src="../src/zepto.js"></script>
+    <script type="text/javascript" src="../src/transition.js"></script>
 </head>
 <body>
     <div data-role="page">
         <div id="tbh5v0" class="content">
             <div id="bodyCont" class="screen-wrap fullscreen">
-                <h1>You're Starting On Page One</h1>
-                <a transition="slide" href="b.html">Flip to page two</a>
+                <h1 hidden>You're Starting On Page One</h1>
+                <a transition="fade" href="b.html">
+                    <img src="a.png" alt="">
+                </a>
             </div>
         </div>
     </div>
