@@ -12,6 +12,10 @@ div.ui-page {
     top: 0px;
 }
 
+div.ui-page-active {
+    z-index: 9999!important;
+}
+
 /*
 * css Extracted from jQuery Mobile Framework
 * Copyright (c) jQuery Project
@@ -423,4 +427,79 @@ Built by David Kaneda and maintained by Jonathan Stark.
         -moz-transform: scale(.2);
         opacity: 0;
     }
+}
+
+.scale {
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.35);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.35);
+    box-shadow: 0 0 10px rgba(0,0,0,0.35);
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    transform: scale(0.8);
+
+    -webkit-transform-origin: 50% 50% 50%;
+    -moz-transform-origin: 50% 50% 50%;
+    -ms-transform-origin: 50% 50% 50%;
+    transform-origin: 50% 50% 50%;
+    -webkit-transition: -webkit-transform .4s;
+    -moz-transition: -moz-transform .4s;
+    transition: transform .4s;
+}
+
+.scale.in {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+    -webkit-transition: -webkit-transform .4s;
+    -moz-transition: -moz-transform .4s;
+    transition: transform .4s;;
+}
+
+.scale.out {
+    -webkit-transform: translateY(100%);
+    -moz-transform: translateY(100%);
+    -ms-transform: translateY(100%);
+    transform: translateY(100%);
+    -webkit-transition: -webkit-transform .4s;
+    -moz-transition: -moz-transform .4s;
+    transition: transform .4s;
+}
+
+.slidex.out {
+    -webkit-transform: translate3d(-30%,0,0);
+    -webkit-animation-name: slideouttoleftx;
+    -moz-transform: translateX(-30%);
+    -moz-animation-name: slideouttoleftx;
+}
+
+.slidex.in {
+    -webkit-transform: translate3d(0,0,0);
+    -webkit-animation-name: slideinfromrightx;
+    -moz-transform: translateX(0);
+    -moz-animation-name: slideinfromrightx;
+}
+
+@-webkit-keyframes slideouttoleftx {
+    from { -webkit-transform: translate3d(0,0,0); }
+    /* fixed by huya.nzb */
+    to { -webkit-transform: translate3d(-30%,0,0); display: none; }
+}
+
+@-moz-keyframes slideouttoleftx {
+    from { -moz-transform: translateX(0); }
+    /* fixed by huya.nzb */
+    to { -moz-transform: translateX(-30%); display:none; }
+}
+
+@-webkit-keyframes slideinfromrightx {
+    from { -webkit-transform: translate3d(100%,0,0); }
+    to { -webkit-transform: translate3d(0,0,0); }
+}
+
+@-moz-keyframes slideinfromrightx {
+    from { -moz-transform: translateX(100%); }
+    to { -moz-transform: translateX(0); }
 }
